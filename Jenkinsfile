@@ -6,6 +6,8 @@ pipeline {
 
  NEW_VERSION = '1.0.0'
 
+ ADMIN_CREDENTIALS = credentials('admin_user_credentials')
+
  }
 
  stages {
@@ -37,6 +39,10 @@ pipeline {
  steps {
 
  echo 'deploying the applicaiton...'
+
+ echo "deploying with ${ADMIN_CREDENTIALS}"
+
+ sh 'printf ${ADMIN_CREDENTIALS}'
 
  }
 
