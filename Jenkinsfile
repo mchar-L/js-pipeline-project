@@ -1,83 +1,85 @@
 pipeline {
 
-   agent any
+	agent any
 
-   parameters {
+	parameters {
 
-      choice(name: 'VERSION', choices: ['1.1.0','1.2.0','1.3.0'], description: '')
+		choice(name: 'VERSION', choices: ['1.1.0','1.2.0','1.3.0'], description: '')
 
-      booleanParam(name: 'executeTests', defaultValue: true, description: '')
+		booleanParam(name: 'executeTests', defaultValue: true, description: '')
 
-   }
+	}
 
-    stages {
+	stages {
 
- stage("init") {
+		stage("init") {
 
- steps {
+			steps {
 
- script {
+				script {
 
- gv = load "script.groovy"
+					gv = load "script.groovy"
 
- }
+				}
 
- }
+			}
 
- }
+		}
 
- stage("build") {
+		stage("Checkout") {
 
- steps {
+			steps {
 
- script {
+				checkout scm
 
- gv.buildApp()
+			}
 
- }
+		}
 
- }
+		stage("Build") {
 
- }
+			steps {
 
-stage("test") {
+				sh 'docker build -t flaskjenkins:v1.0.0 .'
 
- when {
+			}
 
- expression {
+		}
 
- params.executeTests
+		stage("test") {
 
- }
+			when {
 
- }
+				expression {
 
- steps {
+					params.executeTests
 
- script {
+				}
 
- gv.testApp()
+			}
 
- }
+			steps {
 
- }
+				script {
 
- }
+					gv.testApp()
 
- stage("deploy") {
+				}
 
- steps {
+			}
 
- script {
+		}
 
- gv.deployApp()
+		stage("deploy") {
 
- }
+			steps {
 
- }
+				echo 'deploying the applicaiton...'
 
- }
+			}
 
- }
+		}
 
- }
+	}
+
+}
