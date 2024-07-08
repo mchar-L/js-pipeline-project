@@ -12,7 +12,7 @@ pipeline {
 
     stages {
 
-stage("build") {
+ stage("build") {
 
  steps {
 
@@ -23,6 +23,16 @@ stage("build") {
  }
 
  stage("test") {
+
+ when {
+
+ expression {
+
+ params.executeTests
+
+ }
+
+ }
 
  steps {
 
@@ -36,7 +46,9 @@ stage("build") {
 
  steps {
 
- echo 'deploying the applicaiton...'
+echo 'deploying the applicaiton...'
+
+ echo "deploying version ${params.VERSION}"
 
  }
 
