@@ -12,17 +12,35 @@ pipeline {
 
     stages {
 
+ stage("init") {
+
+ steps {
+
+ script {
+
+ gv = load "script.groovy"
+
+ }
+
+ }
+
+ }
+
  stage("build") {
 
  steps {
 
- echo 'building the applicaiton...'
+ script {
+
+ gv.buildApp()
 
  }
 
  }
 
- stage("test") {
+ }
+
+stage("test") {
 
  when {
 
@@ -36,7 +54,11 @@ pipeline {
 
  steps {
 
- echo 'testing the applicaiton...'
+ script {
+
+ gv.testApp()
+
+ }
 
  }
 
@@ -46,9 +68,11 @@ pipeline {
 
  steps {
 
-echo 'deploying the applicaiton...'
+ script {
 
- echo "deploying version ${params.VERSION}"
+ gv.deployApp()
+
+ }
 
  }
 
