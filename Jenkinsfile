@@ -84,7 +84,7 @@ pipeline {
 
 				]]) {
 
-					sh "docker tag flask-jenkins:v1.0.0 ${DOCKER_USER_ID}/jenkins-app:${BUILD_NUMBER}"
+					sh "docker tag flask-jenkins:latest ${DOCKER_USER_ID}/jenkins-app:${BUILD_NUMBER}"
 
 					sh "docker login -u ${DOCKER_USER_ID} -p ${DOCKER_USER_PASSWORD}"
 
