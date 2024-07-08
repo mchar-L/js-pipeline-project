@@ -1,59 +1,83 @@
 pipeline {
 
- agent any
+   agent any
 
- stages {
+   parameters {
 
- stage("build") {
+      choice(name: 'VERSION', choices: ['1.1.0','1.2.0','1.3.0'], description: '')
 
- when {
+      booleanParam(name: 'executeTests', defaultValue: true, description: '')
 
- expression {
+   }
 
- env.GIT_BRANCH == 'origin/master'
+   stages {
 
- }
+      stage("init") {
 
- }
+         steps {
 
- steps {
+            script {
 
- echo 'building the applicaiton...'
+               gv = load "script.groovy"
 
- }
+            }
 
- }
+         }
 
- stage("test") {
+      }
 
- when {
+      stage("build") {
 
- expression {
+         steps {
 
- env.GIT_BRANCH == 'origin/test' || env.GIT_BRANCH == ''
+            script {
 
- }
+               gv.buildApp()
 
- }
+            }
 
-steps {
+         }
 
- echo 'testing the applicaiton...'
+      }
 
- }
+      stage("test") {
 
- }
+         when {
 
- stage("deploy") {
+            expression {
 
- steps {
+               params.executeTests
 
- echo 'deploying the applicaiton...'
+            }
 
- }
+         }
 
- }
+         steps {
 
- }
+            script {
 
- }
+               gv.testApp()
+
+            }
+
+         }
+
+      }
+
+      stage("deploy") {
+
+         steps {
+
+            script {
+
+               gv.deployApp()
+
+            }
+
+         }
+
+      }
+
+   }
+
+}
